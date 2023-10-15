@@ -12,12 +12,13 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.event.ListDataListener;
 
 public class ControladorVistaGerente implements ActionListener {//Hijo de ActionEvent
 
-    private Double tiempPrice;
+    private Double tiempPrice  = 0.0;
     private Double price = 0.0;
     private final Object[] almacen = {"Alamcen1"};
     private PestañaGerente pestañaGerente;
@@ -32,7 +33,6 @@ public class ControladorVistaGerente implements ActionListener {//Hijo de Action
         jButtonListener();
         radio();
         showNewGerente();
-        
 
     }
 
@@ -93,7 +93,6 @@ public class ControladorVistaGerente implements ActionListener {//Hijo de Action
         pestañaGerente.RBSemana.addActionListener(this);
         pestañaGerente.RBMes.addActionListener(this);
         pestañaGerente.RBAño.addActionListener(this);
-        pestañaGerente.btConfirt.addActionListener(this);
 
     }
 
@@ -139,8 +138,7 @@ public class ControladorVistaGerente implements ActionListener {//Hijo de Action
              * tiempPrice = 7.0 * 24.0; if (pestañaGerente.RBSemana.isSelected()
              * == true) { price += tiempPrice * 20; } else if
              * (pestañaGerente.RBSemana.isSelected() == false) { price -=
-             * tiempPrice * 20;
-            }
+             * tiempPrice * 20; }
              */
         }
         if (e.getSource().equals(pestañaGerente.RBMes)) {
@@ -154,8 +152,7 @@ public class ControladorVistaGerente implements ActionListener {//Hijo de Action
              * tiempPrice = 31.0 * 24; if (pestañaGerente.RBMes.isSelected() ==
              * true) { price += tiempPrice * 20; } else if
              * (pestañaGerente.RBMes.isSelected() == false) { price -=
-             * tiempPrice * 20;
-            }
+             * tiempPrice * 20; }
              */
         }
         if (e.getSource().equals(pestañaGerente.RBAño)) {
@@ -175,37 +172,35 @@ public class ControladorVistaGerente implements ActionListener {//Hijo de Action
 
         if (e.getSource().equals(pestañaGerente.btConfirt)) {
             JTextField[] datos = {pestañaGerente.txtDia, pestañaGerente.txtSemana, pestañaGerente.txtMes, pestañaGerente.txtAño};
-            Double priceacum ;
-            for (JTextField x : datos) {
-                if (x.getText().isEmpty()) {
-                      JOptionPane.showMessageDialog(pestañaGerente, "Inserte datos en las cajillas","Error de insercion",JOptionPane.WARNING_MESSAGE);
-                      break;
+            JRadioButton[] radio = {pestañaGerente.RBDia, pestañaGerente.RBAño, pestañaGerente.RBMes, pestañaGerente.RBSemana};
+            boolean ver = true;
+            for (JRadioButton x : radio) {
+                if (x.isSelected() == true && x.equals(pestañaGerente.RBDia)) {
+                    if (!datos[0].getText().isEmpty()) {
+                        ver = false;
+                        price = 24.0;
+                        tiempPrice += (Double.parseDouble(datos[0].getText()) * price) * 3;
+                    } else {
+                        JOptionPane.showMessageDialog(pestañaGerente, "Ingrese un dato");
+                        break;
+                    }
                 }
-                if(!x.getText().isEmpty()){
-                    if(pestañaGerente.RBDia.isSelected()==true){
-                     if(x==pestañaGerente.txtDia){
-                         price=(Double.parseDouble( x.getText())*24)*3;
-                     }
-                    }
-                    if(pestañaGerente.RBSemana.isSelected()==true){
-                     if(x==pestañaGerente.txtSemana){
-                         price=(Double.parseDouble( x.getText())*168)*3;
-                     }
-                    }
-                    if(pestañaGerente.RBMes.isSelected()==true){
-                     if(x==pestañaGerente.txtMes){
-                         price=(Double.parseDouble( x.getText())*720)*3;
-                     }
-                    }
-                    if(pestañaGerente.RBAño.isSelected()==true){
-                     if(x==pestañaGerente.txtAño){
-                         price=(Double.parseDouble( x.getText())*123123)*3;
-                     }
+                if (x.isSelected() == true && x.equals(pestañaGerente.RBAño)) {
+                    if (!datos[3].getText().isEmpty()) {
+                        ver = false;
+                        price = 134 * 24.0;
+                        tiempPrice += (Double.parseDouble(datos[3].getText()) * price) * 3;
+                    } else {
+                        JOptionPane.showMessageDialog(pestañaGerente, "Ingrese un dato");
+                        break;
                     }
                 }
             }
-            pestañaGerente.lblMessage.setText(price.toString());
-
+            if (!ver) {
+                pestañaGerente.jDialogDate.setVisible(false);
+                pestañaGerente.lblMessage.setText(tiempPrice.toString());
+                tiempPrice = 0.0;
+            }
         }
     }
 
